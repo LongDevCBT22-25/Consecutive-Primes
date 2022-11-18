@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #define FastIO ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 #define uint unsigned long long
+#define pb push_back
 using namespace std;
 using u64 = uint64_t;
 using u128 = __uint128_t;
@@ -15,15 +16,15 @@ void input(){
     freopen("c.out","w", stdout);
 }
 u64 binpower(u64 base, u64 e, u64 mod) {
-    u64 result = 1;
+    u64 ans = 1;
     base %= mod;
     while (e) {
         if (e & 1)
-            result = (u128)result * base % mod;
+            ans = (u128)ans * base % mod;
         base = (u128)base * base % mod;
         e >>= 1;
     }
-    return result;
+    return ans;
 }
 bool check_composite(u64 n, u64 a, u64 d, int s) {
     u64 x = binpower(a, d, n);
@@ -39,18 +40,15 @@ bool check_composite(u64 n, u64 a, u64 d, int s) {
 bool MillerRabin(u64 n) { 
     if (n < 2)
         return false;
-
     int r = 0;
     u64 d = n - 1;
     while ((d & 1) == 0) {
         d >>= 1;
         r++;
     }
-
     for (int a : {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31}) {
         if (n % a == 0) return false;
     }
-
     for (int a : {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31}) {
         if (check_composite(n, a, d, r))
             return false;
@@ -61,7 +59,7 @@ void gen() {
     for (int i = 2; i < maxN; i++) {
         if (!p[i]) {
             for (int j = i + i; j < maxN; j += i) p[j] = i;
-            primes.push_back(i);
+            primes.pb(i);
         }
     }
     uint limits = 1000000000;
@@ -105,14 +103,10 @@ bool special_case(uint n) {
 void solve() {
     uint n;
     cin >> n;
-    if (M[n] || special_case(n)) {
-        cout << "NICE" << '\n';
-    } else {
-        cout << "UGLY" << '\n';
-    }
+    cout << ((M[n] || special_case(n)) ? "NICE\n" : "UGLY\n");
 }
 int32_t main() {
-    open_file();
+    input();
     gen();
     int t = 1;
     cin >> t;
