@@ -1,20 +1,19 @@
 #include <bits/stdc++.h>
-
+#define FastIO ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define uint unsigned long long
 using namespace std;
-
-void open_file() {
-#ifdef THEMIS
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
-#endif  // THEMIS
-}
-
-#define ull unsigned long long
-mt19937 rnd((ull)chrono::system_clock::now().time_since_epoch().count());
-
 using u64 = uint64_t;
 using u128 = __uint128_t;
-
+mt19937 rnd((uint)chrono::system_clock::now().time_since_epoch().count());
+const int maxN = 4e6;
+int p[maxN];
+vector<int> primes;
+map<uint, int> M;
+void input(){
+    FastIO;
+    freopen("c.inp","r", stdin);
+    freopen("c.out","w", stdout);
+}
 u64 binpower(u64 base, u64 e, u64 mod) {
     u64 result = 1;
     base %= mod;
@@ -26,7 +25,6 @@ u64 binpower(u64 base, u64 e, u64 mod) {
     }
     return result;
 }
-
 bool check_composite(u64 n, u64 a, u64 d, int s) {
     u64 x = binpower(a, d, n);
     if (x == 1 || x == n - 1)
@@ -38,8 +36,7 @@ bool check_composite(u64 n, u64 a, u64 d, int s) {
     }
     return true;
 };
-
-bool MillerRabin(u64 n) {  // returns true if n is prime, else returns false.
+bool MillerRabin(u64 n) { 
     if (n < 2)
         return false;
 
@@ -60,12 +57,6 @@ bool MillerRabin(u64 n) {  // returns true if n is prime, else returns false.
     }
     return true;
 }
-
-const int maxN = 4e6;
-int p[maxN];
-vector<int> primes;
-map<ull, int> M;
-
 void gen() {
     for (int i = 2; i < maxN; i++) {
         if (!p[i]) {
@@ -73,12 +64,10 @@ void gen() {
             primes.push_back(i);
         }
     }
-
-    ull limits = 1000000000;
+    uint limits = 1000000000;
     limits *= limits * 10;
-
     for (int i = 0; i < (int)primes.size(); i++) {
-        ull tich = 1;
+        uint tich = 1;
         for (int j = i; j < (int)primes.size(); j++) {
             if (tich <= limits / primes[j]) {
                 tich *= primes[j];
@@ -89,38 +78,32 @@ void gen() {
         }
     }
 }
-
-bool special_case(ull n) {
+bool special_case(uint n) {
     if (MillerRabin(n)) return true;
     if (n <= 1e12) return false;
-
-    ull x = sqrt(n);
+    uint x = sqrt(n);
     while (x * x > n) x--;
     while ((x + 1) * (x + 1) <= n) x++;
-
-    ull larger = 0;
-    ull weaker = 0;
+    uint larger = 0;
+    uint weaker = 0;
     for (int i = 1;; i++) {
-        ull y = x + i;
+        uint y = x + i;
         if (MillerRabin(y)) {
             larger = y;
             break;
         }
     }
-
     for (int i = 0;; i--) {
-        ull y = x + i;
+        uint y = x + i;
         if (MillerRabin(y)) {
             weaker = y;
             break;
         }
     }
-
     return n == larger * weaker;
 }
-
-void sol() {
-    ull n;
+void solve() {
+    uint n;
     cin >> n;
     if (M[n] || special_case(n)) {
         cout << "NICE" << '\n';
@@ -128,13 +111,10 @@ void sol() {
         cout << "UGLY" << '\n';
     }
 }
-int main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
+int32_t main() {
     open_file();
     gen();
     int t = 1;
     cin >> t;
-    while (t--) sol();
+    while (t--) solve();
 }
